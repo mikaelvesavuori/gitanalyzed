@@ -14,7 +14,7 @@ GitAnalyzed wraps features readily available in Git, but which might be underuti
 
 ### File Churn
 
-Where are changes taking place?
+_Where are changes taking place?_
 
 ```text
  233 package.json
@@ -26,7 +26,7 @@ Where are changes taking place?
 
 ### Line Churn
 
-How much is added and removed?
+_How much is added and removed?_
 
 ```text
 Added lines: 738210
@@ -35,7 +35,7 @@ Removed lines: 671364
 
 ### Author Churn
 
-Who's doing the work?
+_Who's doing the work?_
 
 ```text
  596 Sam Person
@@ -47,7 +47,7 @@ Who's doing the work?
 
 ### Code Ownership
 
-Where are authors working?
+_Where are authors working?_
 
 ```text
 10 Sam Person,Dat Person,Hoo Person, README.md
@@ -59,7 +59,7 @@ Where are authors working?
 
 ### Churn Rate
 
-What's the average rate of change?
+_What's the average rate of change?_
 
 ```text
 Churn rate: 4 changes per day
@@ -67,7 +67,7 @@ Churn rate: 4 changes per day
 
 ### Bug Fixes
 
-How many commits solve bugs, errors, or otherwise provide fixes for known problems?
+_How many commits solve bugs, errors, or otherwise provide fixes for known problems?_
 
 ```text
 Bug fixes/errors:       79 out of      817 commits (9%)
@@ -85,7 +85,7 @@ fc236a47 Wed May 4 22:00:56 2022 +0200 fix(): issue 154, remove snyk, update dep
 
 ### Active Branches
 
-What are the live branches, right now?
+_What are the live branches, right now?_
 
 ```text
   main
