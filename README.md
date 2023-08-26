@@ -6,7 +6,7 @@ GitAnalyzed is your passport to unlocking the psychology of your codebase. GitAn
 
 ## What to know
 
-GitAnalyzed wraps features readily available in Git, but which might be underutilized by many of us. Indeed there are good commercial tools out there - using GitAnalyzed, however, will provide you with important keystone features at no cost, no legacy or dependencies (as it's just plain Git), and makes it very easy-to-inspect results.
+GitAnalyzed wraps features readily available in Git, but which might be underutilized by many of us. Indeed there are good commercial tools out there - using GitAnalyzed, however, will provide you with important cornerstone features at no cost, no legacy or dependencies (as it's just plain Git), with very easy-to-inspect results.
 
 **Results are output into a directory named `gitanalyzed` with `.txt` files for each feature.**
 
