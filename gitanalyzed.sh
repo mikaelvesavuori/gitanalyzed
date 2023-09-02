@@ -11,6 +11,7 @@ FILENAME_CHURN_RATE="churn_rate.txt"
 FILENAME_BUG_FIXES="bug_fixes.txt"
 FILENAME_BUG_FIXES_PERCENT="bug_fix_percentage.txt"
 FILENAME_ACTIVE_BRANCHES="active_branches.txt"
+FILENAME_DAYS_SINCE_LAST_COMMIT="days_since_last_commit.txt"
 
 calculateFileChurn() {
   git log --pretty=format: --name-only | grep -v '^$' | sort | uniq -c | sort -nr >"$GITANALYZED_FOLDER/$FILENAME_FILE_CHURN"
@@ -63,6 +64,21 @@ listActiveBranches() {
   echo "$active_branches" >"$GITANALYZED_FOLDER/$FILENAME_ACTIVE_BRANCHES"
 }
 
+daysSinceLastCommit() {
+  last_commit_date=$(git log -1 --format="%ai")
+  last_commit_timestamp=$(date -jf "%Y-%m-%d %H:%M:%S %z" "$last_commit_date" "+%s")
+  current_timestamp=$(date "+%s")
+  time_diff=$((current_timestamp - last_commit_timestamp))
+  days_since_last_commit=$((time_diff / 86400)) # 86400 seconds in a day
+  echo "Days since the last commit: $days_since_last_commit" >"$GITANALYZED_FOLDER/$FILENAME_DAYS_SINCE_LAST_COMMIT"
+}
+
+# Check if the current directory is a Git repository
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "Not in a Git repository. Exiting."
+  exit 1
+fi
+
 mkdir -p $GITANALYZED_FOLDER
 
 calculateFileChurn
@@ -72,5 +88,6 @@ calculateCodeOwnership
 calculateChurnRate
 calculateBugFixes
 listActiveBranches
+daysSinceLastCommit
 
 echo "Done!"
