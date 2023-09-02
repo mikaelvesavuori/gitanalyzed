@@ -94,6 +94,14 @@ _What are the live branches, right now?_
   nasty-integration
 ```
 
+### Days since last commit
+
+_How long since the last change?_
+
+```text
+Days since the last commit: 6
+```
+
 ## Installation
 
 You can use it just as any old script in a project if you want...
