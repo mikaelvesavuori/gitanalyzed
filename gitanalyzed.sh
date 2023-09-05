@@ -66,7 +66,7 @@ listActiveBranches() {
 
 daysSinceLastCommit() {
   last_commit_date=$(git log -1 --format="%ai")
-  last_commit_timestamp=$(date -jf "%Y-%m-%d %H:%M:%S %z" "$last_commit_date" "+%s")
+  last_commit_timestamp=$(date -d "$last_commit_date" "+%s")
   current_timestamp=$(date "+%s")
   time_diff=$((current_timestamp - last_commit_timestamp))
   days_since_last_commit=$((time_diff / 86400)) # 86400 seconds in a day
