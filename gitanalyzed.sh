@@ -11,6 +11,7 @@ FILENAME_CHURN_RATE="churn_rate.txt"
 FILENAME_BUG_FIXES="bug_fixes.txt"
 FILENAME_BUG_FIXES_PERCENT="bug_fix_percentage.txt"
 FILENAME_ACTIVE_BRANCHES="active_branches.txt"
+FILENAME_COMMITS_LAST_MONTH="commits_last_month.txt"
 FILENAME_DAYS_SINCE_LAST_COMMIT="days_since_last_commit.txt"
 
 calculateFileChurn() {
@@ -64,9 +65,22 @@ listActiveBranches() {
   echo "$active_branches" >"$GITANALYZED_FOLDER/$FILENAME_ACTIVE_BRANCHES"
 }
 
+listCommitsLastMonth() {
+  commits_last_month=$(git log --since="1 month ago" --until="0 month ago" --pretty=format:'%h,%an,%ar,%s' | wc -l)
+  echo "Commits in the Last Month: $commits_last_month" >"$GITANALYZED_FOLDER/$FILENAME_COMMITS_LAST_MONTH"
+  list_commits_last_month=$(git log --since="1 month ago" --until="0 month ago" --pretty=format:'%h,%an,%ar,%s')
+  echo "$list_commits_last_month" >>"$GITANALYZED_FOLDER/$FILENAME_COMMITS_LAST_MONTH"
+}
+
 daysSinceLastCommit() {
   last_commit_date=$(git log -1 --format="%ai")
-  last_commit_timestamp=$(date -jf "%Y-%m-%d %H:%M:%S %z" "$last_commit_date" "+%s")
+
+  if [[ "$(uname | tr '[:upper:]' '[:lower:]')" == "darwin" ]]; then
+    last_commit_timestamp=$(date -jf "%Y-%m-%d %H:%M:%S %z" "$last_commit_date" "+%s")
+  else
+    last_commit_timestamp=$(date -d "$last_commit_date" "+%s")
+  fi
+
   current_timestamp=$(date "+%s")
   time_diff=$((current_timestamp - last_commit_timestamp))
   days_since_last_commit=$((time_diff / 86400)) # 86400 seconds in a day
@@ -88,6 +102,7 @@ calculateCodeOwnership
 calculateChurnRate
 calculateBugFixes
 listActiveBranches
+listCommitsLastMonth
 daysSinceLastCommit
 
 echo "Done!"
