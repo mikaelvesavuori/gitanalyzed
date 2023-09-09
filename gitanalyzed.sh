@@ -66,22 +66,21 @@ listActiveBranches() {
 }
 
 listCommitsLastMonth() {
-  commits_last_month=$( git log --since="1 month ago" --until="0 month ago" --pretty=format:'%h,%an,%ar,%s' | wc -l)
+  commits_last_month=$(git log --since="1 month ago" --until="0 month ago" --pretty=format:'%h,%an,%ar,%s' | wc -l)
   echo "Commits in the Last Month: $commits_last_month" >"$GITANALYZED_FOLDER/$FILENAME_COMMITS_LAST_MONTH"
-  list_commits_last_month=$( git log --since="1 month ago" --until="0 month ago" --pretty=format:'%h,%an,%ar,%s')
+  list_commits_last_month=$(git log --since="1 month ago" --until="0 month ago" --pretty=format:'%h,%an,%ar,%s')
   echo "$list_commits_last_month" >>"$GITANALYZED_FOLDER/$FILENAME_COMMITS_LAST_MONTH"
 }
 
 daysSinceLastCommit() {
   last_commit_date=$(git log -1 --format="%ai")
-  case $(uname | tr '[:upper:]' '[:lower:]') in
-  darwin*)
+
+  if [[ "$(uname | tr '[:upper:]' '[:lower:]')" == "darwin" ]]; then
     last_commit_timestamp=$(date -jf "%Y-%m-%d %H:%M:%S %z" "$last_commit_date" "+%s")
-    ;;
-  *)
+  else
     last_commit_timestamp=$(date -d "$last_commit_date" "+%s")
-    ;;
-  esac
+  fi
+
   current_timestamp=$(date "+%s")
   time_diff=$((current_timestamp - last_commit_timestamp))
   days_since_last_commit=$((time_diff / 86400)) # 86400 seconds in a day
