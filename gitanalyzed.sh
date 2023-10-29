@@ -112,8 +112,7 @@ calculateTagStatistics() {
     echo "" >>"$GITANALYZED_FOLDER/$FILENAME_TAG_STATISTICS"
 
     start_tag=""
-    for tag in $(git tag --sort=-taggerdate)
-    do
+    for tag in $(git tag --sort=-taggerdate); do
       if [ -n "$start_tag" ]; then
         calculateCommitsPerTag "$start_tag" "$tag"
       fi
