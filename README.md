@@ -102,6 +102,21 @@ _How long since the last change?_
 Days since the last commit: 6
 ```
 
+### Tag statistics
+
+_How many tags are there, how many commits per tag and the average number of commits per tag?_
+
+```text
+Total tags: 5
+Average commits per tag: 2.8
+
+2.1.1 (2023-10-27): 2
+2.1.0 (2023-10-19): 3
+2.0.0 (2023-10-12): 4
+1.0.1 (2023-10-10): 2
+1.0.0 (2023-10-06): 3
+```
+
 ## Installation
 
 You can use it just as any old script in a project if you want...
