@@ -13,6 +13,7 @@ FILENAME_BUG_FIXES_PERCENT="bug_fix_percentage.txt"
 FILENAME_ACTIVE_BRANCHES="active_branches.txt"
 FILENAME_COMMITS_LAST_MONTH="commits_last_month.txt"
 FILENAME_DAYS_SINCE_LAST_COMMIT="days_since_last_commit.txt"
+FILENAME_TAG_STATISTICS="tag_statistics.txt"
 
 calculateFileChurn() {
   git log --pretty=format: --name-only | grep -v '^$' | sort | uniq -c | sort -nr >"$GITANALYZED_FOLDER/$FILENAME_FILE_CHURN"
@@ -87,6 +88,45 @@ daysSinceLastCommit() {
   echo "Days since the last commit: $days_since_last_commit" >"$GITANALYZED_FOLDER/$FILENAME_DAYS_SINCE_LAST_COMMIT"
 }
 
+calculateCommitsPerTag() {
+  if [[ "$(uname | tr '[:upper:]' '[:lower:]')" == "darwin" ]]; then
+    tag_date=$(date -jf "%Y-%m-%d" "$(git log -1 --format=%ai "$1")" "+%s")
+  else
+    tag_date=$(date -d "$(git log -1 --format=%ai "$1")" "+%Y-%m-%d")
+  fi
+
+  commits_per_tag=$(git rev-list --count "$1"..."$2")
+  echo "$1 ($tag_date): $commits_per_tag" >>"$GITANALYZED_FOLDER/$FILENAME_TAG_STATISTICS"
+}
+
+calculateTagStatistics() {
+  total_tags=$(git tag | wc -l)
+
+  echo "Total tags: $total_tags" >"$GITANALYZED_FOLDER/$FILENAME_TAG_STATISTICS"
+
+  if [ "$total_tags" -gt 0 ]; then
+    total_commits=$(git log --oneline | wc -l)
+    average_commits_per_tag=$(awk "BEGIN {print $total_commits/$total_tags}")
+
+    echo "Average commits per tag: $average_commits_per_tag" >>"$GITANALYZED_FOLDER/$FILENAME_TAG_STATISTICS"
+    echo "" >>"$GITANALYZED_FOLDER/$FILENAME_TAG_STATISTICS"
+
+    start_tag=""
+    for tag in $(git tag --sort=-taggerdate)
+    do
+      if [ -n "$start_tag" ]; then
+        calculateCommitsPerTag "$start_tag" "$tag"
+      fi
+      start_tag=$tag
+    done
+
+    # Count the number of commits between the first tag and the first commit
+    calculateCommitsPerTag "$start_tag" "$(git rev-list --max-parents=0 --first-parent HEAD)"
+  else
+    echo "Average commits per tag: N/A" >>"$GITANALYZED_FOLDER/$FILENAME_TAG_STATISTICS"
+  fi
+}
+
 # Check if the current directory is a Git repository
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "Not in a Git repository. Exiting."
@@ -104,5 +144,6 @@ calculateBugFixes
 listActiveBranches
 listCommitsLastMonth
 daysSinceLastCommit
+calculateTagStatistics
 
 echo "Done!"
